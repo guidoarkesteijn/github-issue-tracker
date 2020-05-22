@@ -93,7 +93,7 @@ namespace github_issue_tracker
 
         private void OnSaveButtonClicked(object sender, RoutedEventArgs e)
         {
-            app.SettingsService.UpdateAppToken(appTokenTextBox.Text);
+            app.UpdateAppToken(appTokenTextBox.Text);
         }
     }
 }

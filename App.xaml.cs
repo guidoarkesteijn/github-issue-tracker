@@ -27,11 +27,9 @@ namespace github_issue_tracker
         {
             SettingsService = new SettingsService();
 
-            if (string.IsNullOrEmpty(SettingsService.AppToken))
+            if (!string.IsNullOrEmpty(SettingsService.AppToken))
             {
-                Client = new GitHubClient(new ProductHeaderValue("OMHToken"));
-                Client.Credentials = new Credentials(SettingsService.AppToken);
-                
+                InitializeGitHubClient(SettingsService.AppToken);
                 RefreshIssues();
             }
         }
@@ -39,6 +37,12 @@ namespace github_issue_tracker
         public void RefreshIssues()
         {
             Task.Run(GetIssues);
+        }
+
+        public void UpdateAppToken(string appToken)
+        {
+            SettingsService.UpdateAppToken(appToken);
+            InitializeGitHubClient(appToken);
         }
 
         private async void GetIssues()
@@ -50,6 +54,12 @@ namespace github_issue_tracker
 
                 Debug.WriteLine(issues.Count);
             });
+        }
+
+        private void InitializeGitHubClient(string appToken)
+        {
+            Client = new GitHubClient(new ProductHeaderValue("OMHToken"));
+            Client.Credentials = new Credentials(SettingsService.AppToken);
         }
     }
 }
